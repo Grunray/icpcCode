@@ -1,0 +1,1 @@
+{"name":"Local: final","url":"g:\\MyVSCode\\MyCCode\\AAA_final\\final.cpp","tests":[{"id":1723427003083,"input":"abcd","output":"abcd\nasdhaiowhdjiola"},{"id":1723427005668,"input":"1234796841","output":"1234796841\nasdhaiowhdjiola\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\MyVSCode\\MyCCode\\AAA_final\\final.cpp","group":"local","local":true}

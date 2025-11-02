@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Test</title>
+</head>
+
+<body>
+    <!-- 不设置内边距 -->
+    <select>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+    </select>
+    <!-- 设置内边距 -->
+    <select class="py-2 px-3">
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+    </select>
+
+    <!-- 不添加 border 参数 -->
+    <div class="w-48 h-24 bg-gray-100">
+        没有边框的 div
+    </div>
+    <!-- 添加 border 参数 -->
+    <div class="w-48 h-24 bg-gray-100 border">
+        有边框的 div
+    </div>
+
+    <div>
+        <button class="mr-4 bg-blue-500 text-white px-4 py-2 rounded-md">按钮 1</button>
+        <button class="bg-green-500 text-white px-4 py-2 rounded-md">按钮 2</button>
+    </div>
+
+    <div>
+        
+    </div>
+
+    <script>
+        // js
+        // 获取数据
+        // 将后端传递的变量 allPlayers 转换为 JSON 格式并赋值给前端的 allPlayers 常量
+        // 这里假设 allPlayers 是一个对象，键为年份，值为对应年份的玩家列表，每个玩家是 [玩家姓名, 战队名称] 的数组
+        const allPlayers = {{ allPlayers| tojson }};
+        // 将后端传递的年份列表 years 转换为 JSON 格式并赋值给前端的 years 常量
+        const years = {{ years| tojson }};
+        // 将后端传递的 Top 3 玩家列表 top3Players 转换为 JSON 格式并赋值给前端的 top3Players 常量
+        const top3Players = {{ top3Players| tojson }};
+
+        // document 代表整个 HTML 文档
+        // 获取按钮和功能区元素
+        // 获取 ID 为 top20-btn 的按钮元素
+        const top20Btn = document.getElementById('top20-btn');
+        // 获取 ID 为 top3-btn 的按钮元素
+        const top3Btn = document.getElementById('top3-btn');
+        // 获取 ID 为 top5-btn 的按钮元素
+        const top5Btn = document.getElementById('top5-btn');
+        // 获取 ID 为 top20-section 的功能区元素
+        const top20Section = document.getElementById('top20-section');
+        // 获取 ID 为 top3-section 的功能区元素
+        const top3Section = document.getElementById('top3-section');
+        // 获取 ID 为 top5-section 的功能区元素
+        const top5Section = document.getElementById('top5-section');
+
+        // 处理选择年份查看 top20 选手
+        // 获取 ID 为 year-select 的年份选择框元素
+        const yearSelect = document.getElementById('year-select');
+        // 获取 ID 为 top20-list 的列表元素，用于显示 Top 20 玩家信息
+        const top20List = document.getElementById('top20-list');
+
+        // 为年份选择框添加 change 事件监听器，当选择的年份改变时触发
+        yearSelect.addEventListener('change', function () {
+            // 获取当前选择的年份
+            const selectedYear = this.value;
+            // 从 allPlayers 对象中获取对应年份的玩家列表
+            const players = allPlayers[selectedYear];
+            // 清空 Top 20 列表中的内容
+            top20List.innerHTML = '';
+            // 遍历玩家列表
+            players.forEach(([player, teamName], index) => {
+                // 创建一个 li 元素用于显示单个玩家信息
+                const li = document.createElement('li');
+                // 创建一个 span 元素用于显示玩家姓名
+                let playerNameElement = document.createElement('span');
+                // 设置玩家姓名的文本内容
+                playerNameElement.textContent = player;
+                // 如果是第一名，添加 gold 类名
+                if (index === 0) {
+                    playerNameElement.classList.add('gold');
+                } 
+                // 如果是第二名，添加 silver 类名
+                else if (index === 1) {
+                    playerNameElement.classList.add('silver');
+                } 
+                // 如果是第三名，添加 bronze 类名
+                else if (index === 2) {
+                    playerNameElement.classList.add('bronze');
+                }
+                // 将玩家姓名元素添加到 li 元素中
+                li.appendChild(playerNameElement);
+                // 创建一个 span 元素用于显示战队名称
+                const teamNameElement = document.createElement('span');
+                // 设置战队名称的文本内容，格式为 (战队名称)
+                teamNameElement.textContent = ` (${teamName})`;
+                // 将战队名称元素添加到 li 元素中
+                li.appendChild(teamNameElement);
+                // 在 li 元素的开头添加排名信息，格式为 Rank X: 
+                li.innerHTML = `Rank ${index + 1}: ` + li.innerHTML;
+                // 将 li 元素添加到 Top 20 列表中
+                top20List.appendChild(li);
+            });
+        });
+
+        // 初始化 top20 列表
+        // 获取年份列表中的第一个年份
+        const initialYear = years[0];
+        // 从 allPlayers 对象中获取第一个年份的玩家列表
+        const initialPlayers = allPlayers[initialYear];
+        // 遍历第一个年份的玩家列表
+        initialPlayers.forEach(([player, teamName], index) => {
+            // 创建一个 li 元素用于显示单个玩家信息
+            const li = document.createElement('li');
+            // 创建一个 span 元素用于显示玩家姓名
+            let playerNameElement = document.createElement('span');
+            // 设置玩家姓名的文本内容
+            playerNameElement.textContent = player;
+            // 如果是第一名，添加 gold 类名
+            if (index === 0) {
+                playerNameElement.classList.add('gold');
+            } 
+            // 如果是第二名，添加 silver 类名
+            else if (index === 1) {
+                playerNameElement.classList.add('silver');
+            } 
+            // 如果是第三名，添加 bronze 类名
+            else if (index === 2) {
+                playerNameElement.classList.add('bronze');
+            }
+            // 将玩家姓名元素添加到 li 元素中
+            li.appendChild(playerNameElement);
+            // 创建一个 span 元素用于显示战队名称
+            const teamNameElement = document.createElement('span');
+            // 设置战队名称的文本内容，格式为 (战队名称)
+            teamNameElement.textContent = ` (${teamName})`;
+            // 将战队名称元素添加到 li 元素中
+            li.appendChild(teamNameElement);
+            // 在 li 元素的开头添加排名信息，格式为 Rank X: 
+            li.innerHTML = `Rank ${index + 1}: ` + li.innerHTML;
+            // 将 li 元素添加到 Top 20 列表中
+            top20List.appendChild(li);
+        });
+
+        // 获取 ID 为 top3-chart 的 canvas 元素的 2D 绘图上下文
+        const ctx = document.getElementById('top3-chart').getContext('2d');
+        // 用于存储每个 Top 3 玩家在不同年份的排名数据
+        const top3Data = {};
+
+        // 去重处理玩家列表，使用 Set 去除重复的玩家姓名
+        const uniqueTopPlayers = [...new Set(top3Players)];
+        // 遍历每个唯一的 Top 3 玩家
+        uniqueTopPlayers.forEach(player => {
+            // 为每个玩家初始化一个空数组，用于存储其在不同年份的排名
+            top3Data[player] = [];
+            // 遍历每个年份
+            years.forEach(year => {
+                // 从 allPlayers 对象中获取对应年份的玩家列表
+                const players = allPlayers[year];
+                // 查找该玩家在该年份玩家列表中的索引
+                const index = players.findIndex(([p, _]) => p === player);
+
+                // 处理找不到玩家或排名超出前三的情况
+                if (index === -1) {
+                    // 如果找不到该玩家，将排名设为 null
+                    top3Data[player].push(null);
+                } else {
+                    // 计算该玩家的排名
+                    const rank = index + 1;
+                    // 确保排名在 1 - 3 之间，如果超出则设为 null
+                    top3Data[player].push(rank <= 3 ? rank : null);
+                }
+            });
+        });
+
+        // 用于存储每个玩家的数据集，每个数据集将用于绘制折线图中的一条线
+        const datasets = [];
+        // 遍历 top3Data 对象中的每个玩家
+        for (const player in top3Data) {
+            // 生成一个随机颜色，用于绘制该玩家的折线
+            const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.7)`;
+            // 创建一个数据集对象
+            datasets.push({
+                // 数据集的标签，即玩家姓名
+                label: player,
+                // 该玩家在不同年份的排名数据
+                data: top3Data[player],
+                // 折线的边框颜色
+                borderColor: color,
+                // 折线的填充颜色
+                backgroundColor: color,
+                // 是否填充折线下方的区域
+                fill: false,
+                // 折线的张力，控制折线的弯曲程度
+                tension: 0.1,
+                // 允许跳过 null 数据点
+                spanGaps: true, 
+                // 数据点的半径大小
+                pointRadius: 15, 
+                // 鼠标悬停时数据点的半径大小
+                pointHoverRadius: 8 
+            });
+        }
+
+        // 使用 Chart.js 库创建一个折线图
+        new Chart(ctx, {
+            // 图表类型为折线图
+            type: 'line',
+            data: {
+                // x 轴的标签，即年份列表
+                labels: years,
+                // 数据集数组，包含每个玩家的数据集
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        // 反转 y 轴，使排名 1 在上方
+                        reverse: true,
+                        // y 轴的最小值为 1
+                        min: 1,      
+                        // y 轴的最大值为 3
+                        max: 3,      
+                        ticks: {
+                            // 强制 y 轴刻度为整数
+                            stepSize: 1, 
+                            // 自定义刻度标签的显示格式，显示为 Rank X
+                            callback: function (value) {
+                                return `Rank ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 按钮点击事件处理
+        // 为 Top 20 按钮添加点击事件监听器
+        top20Btn.addEventListener('click', function () {
+            // 显示 Top 20 功能区
+            top20Section.classList.remove('hidden');
+            // 隐藏 Top 3 功能区
+            top3Section.classList.add('hidden');
+            // 隐藏 Top 5 功能区
+            top5Section.classList.add('hidden');
+        });
+
+        // 为 Top 3 按钮添加点击事件监听器
+        top3Btn.addEventListener('click', function () {
+            // 显示 Top 3 功能区
+            top3Section.classList.remove('hidden');
+            // 隐藏 Top 20 功能区
+            top20Section.classList.add('hidden');
+            // 隐藏 Top 5 功能区
+            top5Section.classList.add('hidden');
+        });
+
+        // 为 Top 5 按钮添加点击事件监听器
+        top5Btn.addEventListener('click', function () {
+            // 显示 Top 5 功能区
+            top5Section.classList.remove('hidden');
+            // 隐藏 Top 20 功能区
+            top20Section.classList.add('hidden');
+            // 隐藏 Top 3 功能区
+            top3Section.classList.add('hidden');
+        });
+    </script>
+    
+</body>
+
+</html>

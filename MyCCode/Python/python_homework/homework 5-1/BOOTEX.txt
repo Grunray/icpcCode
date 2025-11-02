@@ -1,0 +1,185 @@
+
+
+Checking file system on H:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         6528 KB in 94 hidden files.
+        30080 KB in 939 folders.
+     67024512 KB in 7052 files.
+     55428448 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1732139 allocation units available on disk.
+
+
+Checking file system on I:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         8704 KB in 148 hidden files.
+        35456 KB in 1107 folders.
+     61826304 KB in 8492 files.
+     60619104 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1894347 allocation units available on disk.
+
+
+Checking file system on H:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         6528 KB in 94 hidden files.
+        30080 KB in 939 folders.
+     67024512 KB in 7052 files.
+     55428448 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1732139 allocation units available on disk.
+
+
+Checking file system on I:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         8704 KB in 148 hidden files.
+        35456 KB in 1107 folders.
+     61826304 KB in 8492 files.
+     60619104 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1894347 allocation units available on disk.
+
+
+Checking file system on H:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         6528 KB in 94 hidden files.
+        30080 KB in 939 folders.
+     67024512 KB in 7052 files.
+     55428448 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1732139 allocation units available on disk.
+
+
+Checking file system on I:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         8704 KB in 148 hidden files.
+        35456 KB in 1107 folders.
+     61826304 KB in 8492 files.
+     60619104 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1894347 allocation units available on disk.
+
+
+Checking file system on H:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         6528 KB in 94 hidden files.
+        30080 KB in 939 folders.
+     67024512 KB in 7052 files.
+     55428448 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1732139 allocation units available on disk.
+
+
+Checking file system on I:
+The type of the file system is FAT32.
+
+
+One of your disks needs to be checked for consistency. You
+may cancel the disk check, but it is strongly recommended
+that you continue.
+Windows will now check the disk.                         
+Volume Serial Number is A493-6A9D
+
+Windows has scanned the file system and found no problems.
+No further action is required.
+    122489600 KB total disk space.
+         8704 KB in 148 hidden files.
+        35456 KB in 1107 folders.
+     61826304 KB in 8492 files.
+     60619104 KB are available.
+
+        32768 bytes in each allocation unit.
+      3827800 total allocation units on disk.
+      1894347 allocation units available on disk.
+

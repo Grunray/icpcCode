@@ -1,0 +1,69 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define IOS std::ios::sync_with_stdio(false), std::cin.tie(0), std::cout.tie(0);
+#define inout freopen("wrt.txt", "r", stdin); freopen("out.txt", "w", stdout);
+#define itn int
+#define PII pair<int, int>
+#define frr for(int i = 0; i < n; i++)
+#define frg for(register int i = 0; i < n; i++)
+#define frp for(int i = 1; i <= n; i++)
+#define fgp for(int i = 0; i <= n; i++)
+#include<bits/stdc++.h>
+using ll = long long;
+using ldou = long double;
+using unll = unsigned long long;
+using namespace std;
+
+const int N = 1e5 + 5;
+const ll INF = 3e16;
+const int MODE = 998244353;
+unll n, m, k;
+int a[N], b[N], f[N];
+map<int, int>mp;
+
+int a[N], d[N];
+////////////////////
+int dp() {
+	d[1] = a[1];
+	int len = 1;
+
+	for (int i = 2; i <= n; i++) {
+		if (a[i] > d[len]) { // 不降序改为 >= 
+			cout << "   a[i] > d[len]   \n";
+			d[++len] = a[i];
+			for (int i = 1; i <= len; i++) cout << d[i] << ' ';
+			cout << '\n';
+		}
+		else {
+			cout << "  ******   \n";
+			int t = lower_bound(d + 1, d + len + 1, a[i]) - d/*-d获得索引*/;  // 不降序改为upper_bound
+			d[t] = a[i];
+			for (int i = 1; i <= len; i++) cout << d[i] << ' ';
+			cout << '\n';
+		}
+	}
+	for (int i = 1; i <= len; i++) cout << d[i] << ' ';
+	cout << '\n';
+
+
+
+	return len;
+}
+//////////////////////
+void solve() {
+
+  cin >> n;
+
+  for(int i = 1; i <= n; i++) cin >> a[i];
+
+  dp();
+
+}
+
+signed main() {
+	//IOS;
+	//inout;
+	int TTT = 1; //cin >> TTT;
+	while (TTT--)
+		solve();
+	return 0;
+}

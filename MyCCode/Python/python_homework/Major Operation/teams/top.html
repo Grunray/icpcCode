@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HLTV Ranking Analysis</title>
+</head>
+<body>
+    <h1>Team Rankings Analysis</h1>
+    
+    <div class="current-rankings">
+        <h2>Current Rankings</h2>
+        {{ tables[0]|safe }}
+    </div>
+    
+    <div class="visualization">
+        <h2>Ranking Trends</h2>
+        <img src="data:image/png;base64,{{ plot_url }}" alt="Ranking Analysis">
+    </div>
+</body>
+</html>

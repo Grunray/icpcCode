@@ -1,0 +1,45 @@
+
+#dict.fromkeys  #用强转一直顺序不对，这个玩意是保持原有顺序的去重
+
+from functools import reduce
+import time
+import datetime
+import math
+import random
+# 简单类时深，复杂类浅， p2 = copy.copy(p1)  ,use -->  copy.deepcopy()
+import copy  
+import re
+import string #punctuation英文标点符号 '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+import csv
+# for WordCloud
+# import wordcloud
+# import numpy
+# import jieba
+# import matplotlib.pyplot as plt #画图
+
+#<-----------------C-O-D-E----------------->#
+
+
+with open(r"G:\MyVSCode\MyCCode\Python\homework 5-1\water.txt", mode = 'r') as cin_file :
+    cin = cin_file.readlines()
+
+per = 1.05
+fees = []
+
+for row in cin : 
+    data = row.split()
+    account = data[0]
+    used = int(data[-1]) - int(data[1])
+    fees.append("{} {:.2f}".format(account, used * per))
+    
+with open(r"G:\MyVSCode\MyCCode\Python\homework 5-1\fee.txt", mode = 'w') as cout_file : 
+        cout_file.write("\n".join(fees))
+
+
+
+
+
+
+
+
+

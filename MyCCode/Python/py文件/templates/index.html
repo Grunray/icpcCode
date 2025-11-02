@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CS Top Players</title>
+    <script src="https://cdn.tailwindcss.com"></script> <!--包含tailwindcss库，快速构建响应式布局即自适应布局-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet"> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       .hidden {
+            display: none;
+        }
+
+       .gold {
+            color: gold;
+        }
+       .silver {
+            color: silver;
+        }
+       .bronze {
+            color: #CD7F32;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-8"><!--背景为浅灰色， 加pixiv=8的边框-->
+    <h1 class="text-3xl font-bold text-center mb-8">CS Top Players</h1>
+
+    <div class="flex justify-center mb-8">
+                                            <!-- 100-900浅到深       图标中等圆角 右边距-->
+        <button id="top20-btn" class="bg-blue-500 text-white rounded-md mr-4">查看每年Top 20选手</button>
+        <button id="top3-btn" class="bg-green-500 text-white rounded-md mr-4">查看每年Top 3选手折线图</button>
+        <button id="top5-btn" class="bg-yellow-500 text-white rounded-md">查看总的Top 5选手</button>
+    </div>
+
+    <!-- 每年Top 20选手功能区 -->
+    <div id="top20-section" class="hidden">
+        <label for="year-select" class="text-2xl block font-bold text-gray-700">选择年份查看Top 20选手</label>
+                                            <!-- 边框 -->
+        <select id="year-select" class="block border border-gray-300 bg-white rounded-md">
+            {% for year in years %}
+            <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <ul id="top20-list" class="mt-4"></ul>
+    </div>
+
+    <!-- 每年Top 3选手折线图功能区 -->
+    <div id="top3-section" class="hidden">
+        <h2 class="text-2xl font-bold mb-4">每年Top 3选手排名折线图</h2>
+        <canvas id="top3-chart" width="400" height="200"></canvas><!-- 画图 -->
+    </div>
+
+    <!-- 总的Top 5选手功能区 -->
+    <div id="top5-section" class="hidden">
+        <h2 class="text-2xl font-bold mb-4">总的Top 5选手</h2>
+        <ul id="top5-list">
+            {% for player, count in top5Players %}
+            <li>{{ player }}: 获得 Top 5 次数为 {{ count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script> // js
+        // 获取数据
+        //                    后端变量 | 转换格式to json
+        const allPlayers = {{ allPlayers| tojson }};
+        const years = {{ years| tojson }};
+        const top3Players = {{ top3Players| tojson }};
+
+        // document 代表整个html
+        // 获取按钮和功能区元素
+        const top20Btn = document.getElementById('top20-btn');
+        const top3Btn = document.getElementById('top3-btn');
+        const top5Btn = document.getElementById('top5-btn');
+        const top20Section = document.getElementById('top20-section');
+        const top3Section = document.getElementById('top3-section');
+        const top5Section = document.getElementById('top5-section');
+
+        // 处理选择年份查看 top20 选手
+        const yearSelect = document.getElementById('year-select');
+        const top20List = document.getElementById('top20-list');
+
+        yearSelect.addEventListener('change', function () {
+            // 获取当前选择的年份
+            const selectedYear = this.value;
+            // 从 allPlayers 对象中获取对应年份的玩家列表
+            const players = allPlayers[selectedYear];
+            // 清空 Top 20 列表中的内容
+            top20List.innerHTML = '';
+            // 遍历玩家列表
+            players.forEach(([player, team], index) => {
+                // 单个职业哥信息
+                const li = document.createElement('li');
+                // 游戏id
+                let playerName = document.createElement('span');
+                playerName.textContent = player;
+                if (index === 0)
+                    playerName.classList.add('gold');
+                else if (index === 1)
+                    playerName.classList.add('silver');
+                else if (index === 2)
+                    playerName.classList.add('bronze');
+                // 将玩家姓名元素添加到 li 元素中
+                li.appendChild(playerName);
+                const teamName = document.createElement('span');
+                teamName.textContent = ` (${team})`;
+                li.appendChild(teamName);
+                li.innerHTML = `Rank ${index + 1}: ` + li.innerHTML;
+                top20List.appendChild(li);
+            });
+        });
+
+        // 初始化 top20 列表
+        // 获取年份列表中的第一个年份
+        const initYear = years[0];
+        // 从 allPlayers 对象中获取第一个年份的玩家列表
+        const initPlayers = allPlayers[initYear];
+        // 遍历第一个年份的玩家列表
+        initPlayers.forEach(([player, team], index) => {
+            // 创建一个 li 元素用于显示单个玩家信息
+            const li = document.createElement('li');
+            // 创建一个 span 元素用于显示玩家姓名
+            let playerName = document.createElement('span');
+            // 设置玩家姓名的文本内容
+            playerName.textContent = player;
+            if (index === 0)
+                playerName.classList.add('gold');
+            else if (index === 1)
+                playerName.classList.add('silver');
+            else if (index === 2)
+                playerName.classList.add('bronze');
+            li.appendChild(playerName);
+            const teamName = document.createElement('span');
+            teamName.textContent = ` (${team})`;
+            li.appendChild(teamName);
+            li.innerHTML = `Rank ${index + 1}: ` + li.innerHTML;
+            top20List.appendChild(li);
+        });
+
+        // canvas元素的2D绘图上下文
+        const ctx = document.getElementById('top3-chart').getContext('2d');
+        const top3Data = {};
+
+        // 去重处理玩家列表
+        // ...相当于遍历取里面具体的元素
+        const unique = [...new Set(top3Players)];
+        unique.forEach(player => {
+            top3Data[player] = [];
+            years.forEach(year => {
+                const players = allPlayers[year];
+                const index = players.findIndex(([p, _]) => p === player);
+                if (index === -1) {
+                    top3Data[player].push(null);
+                } else {
+                    const rank = index + 1;
+                    top3Data[player].push(rank <= 3 ? rank : null);
+                }
+            });
+        });
+
+        // 数据集
+        const datasets = [];
+        for (const player in top3Data) {
+            const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.7)`;
+            datasets.push({
+                // datasets标签，即职业哥id
+                label: player,
+                // 不同年份的排名数据
+                data: top3Data[player],
+                // 边框颜色
+                borderColor: color,
+                // 填充颜色
+                backgroundColor: color,
+                // 是否填充折线下方的区域
+                fill: false,
+                // 折线的弯曲程度
+                tension: 0,
+                 // 允许跳过null数据点
+                spanGaps: true,
+                // 点的大小
+                pointRadius: 15, 
+                // 悬停时点的大小
+                pointHoverRadius: 25 
+            });
+        }
+
+        // 使用 Chart.js 库创建一个折线图
+        new Chart(ctx, {
+            type: 'line', // 图表类型为折线图
+            data: {
+                labels: years, //x轴标签--年份列表
+                datasets: datasets // 数据集数组
+            },
+            options: {
+                scales: {
+                    y: {
+                        reverse: true, // 排名1在上方
+                        min: 1,
+                        max: 3,
+                        ticks: {
+                            stepSize: 1, // y轴强制显示整数刻度
+                            // 自定义刻度标签的显示格式，显示为 Rank X
+                            callback: function (value) {
+                                return `Rank ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 按钮点击事件处理
+        top20Btn.addEventListener('click', function () {
+            top20Section.classList.remove('hidden'); // show
+            top3Section.classList.add('hidden'); // hide
+            top5Section.classList.add('hidden'); // hide
+        });
+
+        top3Btn.addEventListener('click', function () {
+            top3Section.classList.remove('hidden');
+            top20Section.classList.add('hidden');
+            top5Section.classList.add('hidden');
+        });
+
+        top5Btn.addEventListener('click', function () {
+            top5Section.classList.remove('hidden');
+            top20Section.classList.add('hidden');
+            top3Section.classList.add('hidden');
+        });
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+[
+  {
+    "key": "roof_deep_separation",
+    "name": "顶板深基点离层量",
+    "value": 123,
+    "result": "C",
+    "is_main": true,
+    "dynamic_value": 119,
+    "static_result": "A",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "roof_shallow_separation",
+    "name": "顶板浅基点离层量",
+    "value": 123,
+    "result": "C",
+    "is_main": true,
+    "dynamic_value": 118,
+    "static_result": "C",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "roof_subsidence",
+    "name": "顶板下沉量",
+    "value": 123,
+    "result": "C",
+    "is_main": true,
+    "dynamic_value": 122.9,
+    "static_result": "C",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "floor_heave",
+    "name": "底板底鼓量",
+    "value": 1231,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 1231,
+    "static_result": "C",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "production_side_convergence",
+    "name": "生产帮移近量",
+    "value": 23,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 22.9,
+    "static_result": "C",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "non_production_side_convergence",
+    "name": "非生产帮移近量",
+    "value": 123,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 122.99,
+    "static_result": "C",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "production_side_bolt_load",
+    "name": "生产帮锚杆载荷",
+    "value": 123,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 122,
+    "static_result": "B",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "non_production_side_bolt_load",
+    "name": "非生产帮锚杆载荷",
+    "value": 123,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 79,
+    "static_result": "B",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "roof_production_side_bolt_load",
+    "name": "顶板锚杆载荷",
+    "value": 123,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 57,
+    "static_result": "B",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "anchor_cable_load",
+    "name": "顶板锚索载荷",
+    "value": 123,
+    "result": "C",
+    "is_main": false,
+    "dynamic_value": 46,
+    "static_result": "A",
+    "dynamic_result": "C"
+  },
+  {
+    "key": "trail_deformation_status",
+    "name": "测站周边巷道变形状况",
+    "result": "A",
+    "select": "无影响",
+    "is_main": false
+  },
+  {
+    "key": "affects_stress_status",
+    "name": "局部网兜影响锚杆受力情况",
+    "result": "B",
+    "select": "中等影响",
+    "is_main": false
+  }
+]

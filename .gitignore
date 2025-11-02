@@ -1,0 +1,40 @@
+# 编译产物
+*.exe
+*.o
+*.class
+*.out
+*.dll
+*.so
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# 输出目录
+output/
+bin/
+build/
+out/
+
+# 临时文件
+*.tmp
+*.log
+*.swp
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量
+.env
+.venv
+
