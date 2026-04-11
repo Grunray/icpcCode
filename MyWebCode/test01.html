@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>烟消费记录 - 日期筛选+数量版</title>
+    <style>
+        /* 全局重置 & 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: var(--primary); /* 主色 60% 占比（背景） */
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+        /* 配色变量（沿用网站1规则） */
+        :root {
+            --primary: #FFE601;    /* 主色 60% - 背景、卡片底色 */
+            --secondary: #340A96;  /* 辅助色 30% - 标题、边框、导航 */
+            --accent: #C90062;     /* 强调色 10% - 按钮、高亮、金额 */
+            --text-dark: #333333;  /* 深色文本 */
+            --text-light: #FFFFFF; /* 浅色文本 */
+            --gray-light: #F5F5F5; /* 浅灰（辅助分隔） */
+            --gray-medium: #E0E0E0;/* 中灰（输入框边框） */
+        }
+        /* 顶部导航栏 */
+        .app-header {
+            background-color: var(--secondary); /* 辅助色占比 */
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .app-header h1 {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .app-header .icon {
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+        /* 日期筛选栏 */
+        .date-filter {
+            padding: 1rem 1.2rem;
+            background-color: var(--primary);
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        .date-filter h2 {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .date-inputs select {
+            flex: 1;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            background-color: var(--text-light);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 16px;
+        }
+        .date-inputs button {
+            padding: 0.6rem 1.2rem;
+            background-color: var(--accent);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        /* 统计概览区（核心视觉区） */
+        .stats-section {
+            padding: 1.5rem 1.2rem;
+            background-color: var(--primary); /* 主色占比 */
+        }
+        .stats-card {
+            background-color: var(--text-light);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--secondary); /* 辅助色点缀 */
+        }
+        .stats-card h2 {
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .stats-item {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        .stats-item .label {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+        .stats-item .value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent); /* 强调色突出金额/数量 */
+        }
+        /* 添加记录按钮（悬浮固定） */
+        .add-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 1.2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--accent); /* 强调色 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(201, 0, 98, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        /* 历史记录区 */
+        .history-section {
+            padding: 0 1.2rem 8rem; /* 给底部按钮留空间 */
+            background-color: var(--primary); /* 主色占比 */
+            padding-bottom: 80px; /* 比之前增加20px (避免被弧形遮挡) */
+
+        }
+        .history-section h2 {
+            color: var(--secondary); /* 辅助色标题 */
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .history-list {
+            gap: 0.8rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .history-item {
+            background-color: var(--text-light);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        .history-item.hidden {
+            display: none;
+        }
+        .history-item .info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .history-item .detail {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+        }
+        .history-item .time {
+            color: #999;
+        }
+        .history-item .count {
+            color: var(--secondary); /* 辅助色显示数量 */
+            font-weight: 500;
+        }
+        .history-item .price-wrap {
+            text-align: right;
+            min-width: 80px;
+        }
+        .history-item .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent); /* 强调色突出金额 */
+        }
+        .history-item .unit-price {
+            font-size: 0.7rem;
+            color: #666;
+        }
+        /* 底部弧形样式 */
+        .bottom-arc {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--accent); /* 强调色 #C90062 */
+            border-top-left-radius: 50% 40%;
+            border-top-right-radius: 50% 40%;
+            z-index: 5;
+        }
+
+        /* 添加记录按钮（修改后） */
+        .add-btn {
+            position: fixed;
+            bottom: 30px; /* 悬浮在弧形上方 */
+            left: 50%;
+            transform: translateX(-50%); /* 水平居中 */
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: var(--text-light); /* 白色按钮 */
+            color: var(--accent); /* 强调色加号 */
+            font-size: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 4px solid var(--secondary); /* 辅助色边框 #340A96 */
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 适配不同手机宽度 */
+        @media (min-width: 414px) {
+            .app-header, .date-filter, .stats-section, .history-section {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="app-header">
+        <h1>烟消费记录</h1>
+        <span class="icon">⚙️</span>
+    </header>
+
+    <!-- 日期筛选栏 -->
+    <section class="date-filter">
+        <h2>筛选消费记录</h2>
+        <div class="date-inputs">
+            <select id="year-select">
+                <option value="all">全部年份</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+            </select>
+            <select id="month-select">
+                <option value="all">全部月份</option>
+                <option value="01">1月</option>
+                <option value="02">2月</option>
+                <option value="03">3月</option>
+                <option value="04">4月</option>
+                <option value="05">5月</option>
+                <option value="06">6月</option>
+                <option value="07">7月</option>
+                <option value="08">8月</option>
+                <option value="09">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+            </select>
+            <select id="day-select">
+                <option value="all">全部日期</option>
+                <option value="01">1日</option>
+                <option value="02">2日</option>
+                <option value="03">3日</option>
+                <option value="04">4日</option>
+                <option value="05">5日</option>
+                <option value="06">6日</option>
+                <option value="07">7日</option>
+                <option value="08">8日</option>
+                <option value="09">9日</option>
+                <option value="10">10日</option>
+                <option value="11">11日</option>
+                <option value="12">12日</option>
+                <option value="13">13日</option>
+                <option value="14">14日</option>
+                <option value="15">15日</option>
+                <option value="16">16日</option>
+                <option value="17">17日</option>
+                <option value="18">18日</option>
+                <option value="19">19日</option>
+                <option value="20">20日</option>
+                <option value="21">21日</option>
+                <option value="22">22日</option>
+                <option value="23">23日</option>
+                <option value="24">24日</option>
+                <option value="25">25日</option>
+                <option value="26">26日</option>
+                <option value="27">27日</option>
+                <option value="28">28日</option>
+                <option value="29">29日</option>
+                <option value="30">30日</option>
+                <option value="31">31日</option>
+            </select>
+            <button id="filter-btn">筛选</button>
+        </div>
+    </section>
+
+    <!-- 统计概览区 -->
+    <section class="stats-section">
+        <div class="stats-card">
+            <h2>筛选后消费统计</h2>
+            <div class="stats-row">
+                <div class="stats-item">
+                    <div class="label">消费次数</div>
+                    <div class="value" id="count-value">6</div>
+                </div>
+                <div class="stats-item">
+                    <div class="label">总数量</div>
+                    <div class="value" id="total-count-value">15</div>
+                </div>
+                <div class="stats-item">
+                    <div class="label">总金额</div>
+                    <div class="value" id="total-value">¥187</div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stats-item">
+                    <div class="label">单次平均数量</div>
+                    <div class="value" id="avg-count-value">2.5</div>
+                </div>
+                <div class="stats-item">
+                    <div class="label">平均单次金额</div>
+                    <div class="value" id="avg-value">¥31.2</div>
+                </div>
+                <div class="stats-item">
+                    <div class="label">单价均价</div>
+                    <div class="value" id="unit-price-value">¥12.5</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 历史记录区 -->
+    <section class="history-section">
+        <h2>近期消费记录</h2>
+        <div class="history-list" id="history-list">
+            <div class="history-item" data-time="2025-12-12 14:30" data-price="35" data-count="1" data-unit-price="35">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2025-12-12 14:30</span>
+                        <span class="count">数量：1包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥35</div>
+                    <div class="unit-price">单价：¥35/包</div>
+                </div>
+            </div>
+            <div class="history-item" data-time="2025-12-10 09:15" data-price="56" data-count="2" data-unit-price="28">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2025-12-10 09:15</span>
+                        <span class="count">数量：2包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥56</div>
+                    <div class="unit-price">单价：¥28/包</div>
+                </div>
+            </div>
+            <div class="history-item" data-time="2025-12-08 18:40" data-price="32" data-count="1" data-unit-price="32">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2025-12-08 18:40</span>
+                        <span class="count">数量：1包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥32</div>
+                    <div class="unit-price">单价：¥32/包</div>
+                </div>
+            </div>
+            <div class="history-item" data-time="2025-12-05 11:20" data-price="60" data-count="2" data-unit-price="30">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2025-12-05 11:20</span>
+                        <span class="count">数量：2包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥60</div>
+                    <div class="unit-price">单价：¥30/包</div>
+                </div>
+            </div>
+            <div class="history-item" data-time="2025-11-28 10:00" data-price="58" data-count="2" data-unit-price="29">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2025-11-28 10:00</span>
+                        <span class="count">数量：2包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥58</div>
+                    <div class="unit-price">单价：¥29/包</div>
+                </div>
+            </div>
+            <div class="history-item" data-time="2024-12-15 16:20" data-price="99" data-count="3" data-unit-price="33">
+                <div class="info">
+                    <div class="name">XX品牌香烟</div>
+                    <div class="detail">
+                        <span class="time">2024-12-15 16:20</span>
+                        <span class="count">数量：3包</span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price">¥99</div>
+                    <div class="unit-price">单价：¥33/包</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部弧形容器 -->
+    <div class="bottom-arc"></div>
+
+    <!-- 添加记录按钮 -->
+    <button class="add-btn">+</button>
+
+    <script>
+        // 核心筛选逻辑
+        const yearSelect = document.getElementById('year-select');
+        const monthSelect = document.getElementById('month-select');
+        const daySelect = document.getElementById('day-select');
+        const filterBtn = document.getElementById('filter-btn');
+        const historyList = document.getElementById('history-list');
+        
+        // 统计元素
+        const countValue = document.getElementById('count-value');
+        const totalCountValue = document.getElementById('total-count-value');
+        const totalValue = document.getElementById('total-value');
+        const avgCountValue = document.getElementById('avg-count-value');
+        const avgValue = document.getElementById('avg-value');
+        const unitPriceValue = document.getElementById('unit-price-value');
+
+        // 初始化所有记录
+        const allItems = Array.from(historyList.querySelectorAll('.history-item'));
+
+        // 筛选函数
+        function filterRecords() {
+            const selectedYear = yearSelect.value;
+            const selectedMonth = monthSelect.value;
+            const selectedDay = daySelect.value;
+            
+            let recordCount = 0; // 消费次数
+            let totalCount = 0;  // 总数量
+            let totalAmount = 0; // 总金额
+            let totalUnitPrice = 0; // 总单价（用于计算均价）
+
+            // 遍历所有记录进行筛选
+            allItems.forEach(item => {
+                const itemTime = item.dataset.time;
+                const [datePart] = itemTime.split(' ');
+                const [year, month, day] = datePart.split('-');
+                
+                // 解析数量、金额、单价
+                const itemCount = parseFloat(item.dataset.count) || 0;
+                const itemPrice = parseFloat(item.dataset.price) || 0;
+                const itemUnitPrice = parseFloat(item.dataset.unitPrice) || 0;
+
+                // 年份/月份/日期匹配
+                const yearMatch = selectedYear === 'all' || year === selectedYear;
+                const monthMatch = selectedMonth === 'all' || month === selectedMonth;
+                const dayMatch = selectedDay === 'all' || day === selectedDay;
+
+                // 显示/隐藏记录
+                if (yearMatch && monthMatch && dayMatch) {
+                    item.classList.remove('hidden');
+                    // 累加统计数据
+                    recordCount++;
+                    totalCount += itemCount;
+                    totalAmount += itemPrice;
+                    totalUnitPrice += itemUnitPrice;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            // 计算衍生统计值
+            const avgCount = recordCount > 0 ? (totalCount / recordCount).toFixed(1) : 0; // 单次平均数量
+            const avgAmount = recordCount > 0 ? (totalAmount / recordCount).toFixed(1) : 0; // 平均单次金额
+            const avgUnitPrice = recordCount > 0 ? (totalUnitPrice / recordCount).toFixed(1) : 0; // 单价均价
+
+            // 更新统计数据展示
+            countValue.textContent = recordCount;
+            totalCountValue.textContent = totalCount;
+            totalValue.textContent = `¥${totalAmount.toFixed(0)}`;
+            avgCountValue.textContent = avgCount;
+            avgValue.textContent = `¥${avgAmount}`;
+            unitPriceValue.textContent = `¥${avgUnitPrice}`;
+        }
+
+        // 绑定筛选按钮事件
+        filterBtn.addEventListener('click', filterRecords);
+
+        // 初始化显示全部数据
+        filterRecords();
+    </script>
+</body>
+</html>

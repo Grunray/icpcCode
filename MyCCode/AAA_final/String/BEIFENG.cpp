@@ -668,6 +668,44 @@ struct STRING
 			Even = Even * 2;
 			return { Odd ,Even };
 		}
+		string longestPalindrome(string s) { // 最长的回文子串的串
+			pair<vector<int>, vector<int> > mana = MANACHER(s);
+			int pos1 = 0, pos2 = 0;
+			int maxn1 = 0, maxn2 = 0;
+			for(int i = 0; i < mana.first.size(); i++) {
+				if (maxn1 < mana.first[i] * 2 - 1) {
+					maxn1 = mana.first[i] * 2 - 1;
+					pos1 = i;
+				}
+				// cout << mana.first[i] << ' ';
+			}
+			// cout << '\n';
+			for(int i = 0; i < mana.second.size(); i++) {
+				if (maxn2 < mana.second[i] * 2) {
+					maxn2 = mana.second[i] * 2;
+					pos2 = i;
+				}
+				// cout << mana.second[i] << ' ';
+			}
+			// cout << '\n';
+			// cout << pos1 << ' ' << maxn1 << '\n';
+			// cout << pos2 << ' ' << maxn2 << '\n';
+			// cout << '\n';
+			string res;
+			if(maxn1 >= maxn2) {
+				for(int i = pos1 - maxn1 / 2; i < pos1 + (maxn1 + 1) / 2; i++) {
+					res += s[i];
+				}
+				// cout << 1 << "  " << pos1 - maxn1 / 2 << "  " << pos1 + (maxn1 + 1) / 2 << '\n';
+			}
+			else {
+				for(int i = pos2 - maxn2 / 2; i < pos2 + maxn2 / 2; i++) {
+					res += s[i];
+				}
+				// cout << 2 << "  " << pos2 - maxn2 / 2 << "  " << pos2 + (maxn2) / 2 << '\n';
+			}
+			return res;
+		}
 		int getMinLenToAddChTOPalindrome(string s) { // 在一个串右边的最少添加多少个字符以使得新串回文
 			pair<vector<int>, vector<int> >pv = MANACHER(s);
 			vector<int>d1 = pv.first;

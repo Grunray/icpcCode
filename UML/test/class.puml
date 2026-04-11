@@ -1,0 +1,43 @@
+@startuml 转账顺序图
+actor 用户输入
+boundary "控制台" as Console
+control "转账" as Transfer
+boundary "BankDBAcess" as DBAccess
+boundary "转账器" as TransDevice
+entity "Receipt" as Receipt
+
+' 用户输入转账信息
+用户输入 -> Console : getTransferAmount()
+用户输入 -> Console : getTargetCardId()
+Console -> Transfer : setAmount(Amount)
+Console -> Transfer : setTargetCardId(ToCardId)
+
+' 金额校验
+Transfer -> Console : [Amount非100倍数]PromptTryAgain("转账额需为100整数倍")
+Console -> 用户输入 : PromptTryAgain("转账额需为100整数倍")
+Transfer -> Console : [Amount>5000]PromptTryAgain("单次转账≤5000元")
+Console -> 用户输入 : PromptTryAgain("单次转账≤5000元")
+
+' 验证目标卡与余额
+Transfer -> DBAccess : checkCardStatus(ToCardId)
+DBAccess --> Transfer : CardStatus
+Transfer -> Console : [CardStatus无效]PromptTryAgain("目标卡号无效")
+Console -> 用户输入 : PromptTryAgain("目标卡号无效")
+
+Transfer -> DBAccess : getBalance(FromCardId)
+DBAccess --> Transfer : Balance
+Transfer -> Console : [Balance<Amount]PromptTryAgain("余额不足")
+Console -> 用户输入 : PromptTryAgain("余额不足")
+
+' 执行转账
+Transfer -> DBAccess : updateBalance(FromCardId, Balance-Amount)
+Transfer -> DBAccess : updateBalance(ToCardId, ToBalance+Amount)
+Transfer -> TransDevice : transfer(Amount)
+TransDevice --> Transfer : 转账成功
+
+' 反馈与回执
+Transfer -> Console : Display("转账成功")
+Console -> 用户输入 : Display("转账成功")
+Transfer -> Receipt : createReceipt()
+
+@enduml

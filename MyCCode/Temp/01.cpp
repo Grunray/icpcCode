@@ -105,19 +105,22 @@ const long long M = 1e6 + 50;
 //priority_queue<pair<int,int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 //vector<vector<int> > vv(5000 + 10, vector<int>(5000 + 10, 0));
 
-class Solution {
-public:
-    int compareVersion(string version1, string version2) {
-        
-    }
-};
+
+
 
 void solve() {
 
-	int n, m; cin >> n >> m;
+	int n = 2;
+	int ans = 1;
 
+	while(n < 1e6) {
+
+		n *= 2;
+		ans++;
+
+	}
 	
-	
+	cout << ans << '\n';
 
 
 

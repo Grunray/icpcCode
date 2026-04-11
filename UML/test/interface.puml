@@ -1,0 +1,28 @@
+@startuml ATM接口图
+skinparam interface {
+    BackgroundColor #e0f7fa
+    BorderColor #00695c
+}
+skinparam class {
+    FontName "Microsoft YaHei"
+}
+
+' 接口
+interface  银行接口 {
+    + 确认PIN(): boolean
+    + 获取余额(): double
+}
+
+interface 取款器接口 {
+    + 设置初始现金(金额: double): void
+    + 吐钞(金额: double): void
+}
+
+' 类
+class ATM
+
+' 实现关系
+ATM ..|> 银行接口
+ATM ..|> 取款器接口
+
+@enduml

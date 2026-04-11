@@ -1,0 +1,1 @@
+{"name":"Local: 5","url":"e:\\Project\\Code\\Leetcode\\5.最长回文子串.cpp","tests":[{"id":1774265380185,"input":"babad","output":""},{"id":1774265410816,"input":"babba","output":""},{"id":1774265651254,"input":"cbbd","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"e:\\Project\\Code\\Leetcode\\5.最长回文子串.cpp","group":"local","local":true}
